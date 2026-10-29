@@ -17,13 +17,18 @@
             ref="surface"
             class="player-surface"
             aria-label="Local video player"
+            @keydown.capture="onControlsKeydown"
             @keydown.esc="onEscape"
+            @pointermove="onControlsPointerMove"
+            @pointerdown.capture="onControlsPointerDown"
+            @pointerleave="onControlsPointerLeave"
             @dragenter.prevent="onDragEnter"
             @dragover.prevent="onDragOver"
             @dragleave.prevent="onDragLeave"
             @drop.prevent="onDrop"
         >
             <div
+                ref="viewport"
                 class="video-viewport"
                 :class="{ 'drop-active': dragging }"
                 tabindex="0"
@@ -42,6 +47,9 @@
                     preload="metadata"
                     aria-label="Selected local video"
                     @loadedmetadata="sync"
+                    @loadeddata="sync"
+                    @seeking="sync"
+                    @seeked="sync"
                     @durationchange="sync"
                     @timeupdate="sync"
                     @play="sync"
@@ -51,7 +59,8 @@
                     @volumechange="sync"
                     @waiting="sync"
                     @error="onMediaError"
-                    @click="togglePlayback"
+                    @click="onVideoClick"
+                    @dblclick="onVideoDoubleClick"
                 ></video>
                 <div v-else class="empty-video">
                     <p>
@@ -69,50 +78,76 @@
                     Drop one video file
                 </div>
             </div>
-            <VideoControls
-                :ready="ready"
-                :playing="playing"
-                :current-time="currentTime"
-                :duration="duration"
-                :volume="volume"
-                :muted="muted"
-                :fullscreen="fullscreen"
-                :fullscreen-supported="fullscreenSupported"
-                @play="togglePlayback"
-                @seek="seek"
-                @volume="setVolume"
-                @mute="toggleMute"
-                @fullscreen="toggleFullscreen"
-            />
-            <p
-                v-if="mediaError || actionError"
-                class="playback-error"
-                role="alert"
+            <div
+                ref="controlsPanel"
+                class="controls-panel"
+                :class="{ 'is-hidden': fullscreen && !controlsVisible }"
+                :inert="fullscreen && !controlsVisible"
+                :aria-hidden="fullscreen && !controlsVisible ? true : undefined"
+                @focusin="onControlsFocusIn"
+                @focusout="onControlsFocusOut"
             >
-                {{ mediaError || actionError }}
-            </p>
+                <VideoControls
+                    :ready="ready"
+                    :playing="playing"
+                    :current-time="currentTime"
+                    :duration="duration"
+                    :volume="volume"
+                    :muted="muted"
+                    :fullscreen="fullscreen"
+                    :fullscreen-supported="fullscreenSupported"
+                    :can-capture="canCapture"
+                    :capturing="capturing"
+                    @play="togglePlayback"
+                    @seek="seek"
+                    @volume="setVolume"
+                    @mute="toggleMute"
+                    @fullscreen="toggleFullscreen"
+                    @screenshot="captureFrame"
+                />
+                <p
+                    v-if="playbackError"
+                    class="playback-error"
+                    role="alert"
+                >
+                    {{ playbackError }}
+                </p>
+            </div>
         </section>
         <div class="player-info">
             <p class="player-status" role="status">
                 {{ status }}
             </p>
+            <p
+                v-if="captureMessage"
+                class="capture-message"
+                role="status"
+            >
+                {{ captureMessage }}
+            </p>
             <p :id="helpId" class="keyboard-help">
                 Focus the video area: Space / K to play or pause, ← / → to seek 5 seconds, ↑ / ↓ or
                 the wheel for volume, M to mute, F for fullscreen. Esc exits fullscreen. Hovering
-                does not change focus or page scrolling.
+                does not change focus or page scrolling. Double-click the video for fullscreen. In
+                fullscreen, move to the bottom to reveal controls, or press Tab. Screenshot saves
+                the current frame as PNG.
             </p>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref, useId } from 'vue';
+import { computed, ref, useId } from 'vue';
 import VideoFilePanel from './VideoFilePanel.vue';
 import VideoControls from './VideoControls.vue';
 import { useVideoPlayer } from './useVideoPlayer';
+import { useFrameCapture } from './useFrameCapture';
+import { useFullscreenControls } from './useFullscreenControls';
 
 const video = ref<HTMLVideoElement | null>(null);
 const surface = ref<HTMLElement | null>(null);
+const viewport = ref<HTMLElement | null>(null);
+const controlsPanel = ref<HTMLElement | null>(null);
 const helpId = useId();
 const dragging = ref(false);
 let dragDepth = 0;
@@ -124,6 +159,7 @@ const {
     actionError,
     status,
     ready,
+    frameReady,
     playing,
     currentTime,
     duration,
@@ -141,10 +177,30 @@ const {
     setVolume,
     toggleMute,
     toggleFullscreen,
+    onVideoClick,
+    onVideoDoubleClick,
     onEscape,
     onKeydown,
     onWheel,
 } = useVideoPlayer(video, surface);
+const {
+    capturing,
+    canCapture,
+    captureFrame,
+    error: captureError,
+    message: captureMessage,
+} = useFrameCapture(video, file, frameReady);
+const playbackError = computed(() => mediaError.value || actionError.value || captureError.value);
+const controlsPinned = computed(() => !!playbackError.value || capturing.value);
+const {
+    visible: controlsVisible,
+    onPointerMove: onControlsPointerMove,
+    onPointerDown: onControlsPointerDown,
+    onPointerLeave: onControlsPointerLeave,
+    onKeydown: onControlsKeydown,
+    onFocusIn: onControlsFocusIn,
+    onFocusOut: onControlsFocusOut,
+} = useFullscreenControls(fullscreen, surface, viewport, controlsPanel, controlsPinned);
 
 function isFileDrag(event: DragEvent): boolean {
     return Array.from(event.dataTransfer?.types ?? []).includes('Files');
@@ -179,8 +235,8 @@ function onDrop(event: DragEvent) {
 }
 .player-surface {
     width: calc(100% - 48px);
-    max-width: 640px;
-    margin: 0 auto;
+    max-width: 720px;
+    margin: 0 24px;
     border: 1px solid var(--border);
     border-radius: 6px;
     overflow: hidden;
@@ -246,6 +302,12 @@ video {
     font-size: 11px;
     line-height: 1.8;
 }
+.capture-message {
+    margin: 0 0 8px;
+    color: var(--secondary);
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
 .error-notice,
 .playback-error {
     margin: 0 24px 16px;
@@ -262,8 +324,7 @@ video {
     border-radius: 0;
 }
 .player-surface:fullscreen {
-    display: flex;
-    flex-direction: column;
+    display: block;
     margin: 0;
     width: 100%;
     height: 100%;
@@ -273,13 +334,37 @@ video {
     background: #090c11;
 }
 .player-surface:fullscreen .video-viewport {
-    flex: 1;
-    min-height: 0;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
     aspect-ratio: auto;
+}
+.player-surface:fullscreen .controls-panel {
+    position: absolute;
+    z-index: 2;
+    inset-inline: 0;
+    bottom: 0;
+    opacity: 1;
+    transform: translateY(0);
+    transition:
+        opacity 180ms ease,
+        transform 180ms ease;
+}
+.player-surface:fullscreen .controls-panel.is-hidden {
+    opacity: 0;
+    transform: translateY(100%);
+    pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+    .player-surface:fullscreen .controls-panel {
+        transition: none;
+    }
 }
 @container (max-width: 600px) {
     .player-surface {
         width: calc(100% - 28px);
+        margin-inline: 14px;
     }
     .player-info {
         padding-inline: 20px;

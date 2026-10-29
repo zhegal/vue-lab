@@ -43,6 +43,14 @@
                 {{ muted || volume === 0 ? 'Unmute' : 'Mute' }}
             </button>
             <button
+                class="button secondary screenshot-button"
+                type="button"
+                :disabled="!canCapture"
+                @click="$emit('screenshot')"
+            >
+                {{ capturing ? 'Saving…' : 'Screenshot' }}
+            </button>
+            <button
                 class="button secondary fullscreen-button"
                 type="button"
                 :disabled="!fullscreenSupported"
@@ -90,6 +98,8 @@ defineProps<{
     muted: boolean;
     fullscreen: boolean;
     fullscreenSupported: boolean;
+    canCapture: boolean;
+    capturing: boolean;
 }>();
 defineEmits<{
     play: [];
@@ -97,6 +107,7 @@ defineEmits<{
     seek: [seconds: number];
     volume: [percent: number];
     fullscreen: [];
+    screenshot: [];
 }>();
 const id = useId();
 </script>
@@ -161,6 +172,9 @@ input[type='range'] {
 .fullscreen-button {
     width: 112px;
 }
+.screenshot-button {
+    width: 108px;
+}
 .buttons-row > button {
     flex-shrink: 0;
 }
@@ -180,7 +194,7 @@ input:disabled {
     }
     .buttons-row {
         display: grid;
-        grid-template-columns: 60px 72px minmax(0, 1fr);
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
     .buttons-row > button {
         width: 100%;

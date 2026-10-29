@@ -12,6 +12,7 @@ export function useVideoPlayer(
     const mediaError = ref('');
     const actionError = ref('');
     const ready = ref(false);
+    const frameReady = ref(false);
     const playing = ref(false);
     const ended = ref(false);
     const buffering = ref(false);
@@ -25,6 +26,12 @@ export function useVideoPlayer(
     let generation = 0;
     let disposed = false;
     let playPending = false;
+    let clickTimer: ReturnType<typeof setTimeout> | undefined;
+
+    function cancelVideoClick() {
+        clearTimeout(clickTimer);
+        clickTimer = undefined;
+    }
 
     const status = computed(() => {
         if (!source.value) return 'No video selected';
@@ -36,6 +43,7 @@ export function useVideoPlayer(
     });
 
     function releaseSource() {
+        cancelVideoClick();
         generation++;
         playPending = false;
         const element = video.value;
@@ -49,6 +57,7 @@ export function useVideoPlayer(
 
     function resetPlayback() {
         ready.value = false;
+        frameReady.value = false;
         playing.value = false;
         ended.value = false;
         buffering.value = false;
@@ -95,6 +104,12 @@ export function useVideoPlayer(
         if (!isCurrent(event) || !video.value) return;
         const element = video.value;
         ready.value = element.readyState >= HTMLMediaElement.HAVE_METADATA && !mediaError.value;
+        frameReady.value =
+            ready.value &&
+            element.readyState >= HTMLMediaElement.HAVE_CURRENT_DATA &&
+            !element.seeking &&
+            element.videoWidth > 0 &&
+            element.videoHeight > 0;
         playing.value = !element.paused && !element.ended;
         ended.value = element.ended;
         currentTime.value = element.currentTime;
@@ -114,6 +129,7 @@ export function useVideoPlayer(
         if (!isCurrent(event)) return;
         video.value?.pause();
         ready.value = false;
+        frameReady.value = false;
         playing.value = false;
         buffering.value = false;
         mediaError.value =
@@ -122,6 +138,7 @@ export function useVideoPlayer(
     }
 
     async function togglePlayback() {
+        cancelVideoClick();
         const element = video.value;
         if (!element || !ready.value) return;
         actionError.value = '';
@@ -186,6 +203,21 @@ export function useVideoPlayer(
             if (!disposed)
                 actionError.value = 'Fullscreen is unavailable or was denied by the browser.';
         }
+    }
+
+    function onVideoClick(event: MouseEvent) {
+        cancelVideoClick();
+        if (event.detail > 1) return;
+        const element = video.value;
+        clickTimer = setTimeout(() => {
+            clickTimer = undefined;
+            if (!disposed && element === video.value) void togglePlayback();
+        }, 300);
+    }
+
+    function onVideoDoubleClick() {
+        cancelVideoClick();
+        void toggleFullscreen();
     }
 
     function onEscape(event: KeyboardEvent) {
@@ -271,6 +303,7 @@ export function useVideoPlayer(
         actionError,
         status,
         ready,
+        frameReady,
         playing,
         currentTime,
         duration,
@@ -288,6 +321,8 @@ export function useVideoPlayer(
         setVolume,
         toggleMute,
         toggleFullscreen,
+        onVideoClick,
+        onVideoDoubleClick,
         onEscape,
         onKeydown,
         onWheel,
