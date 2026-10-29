@@ -98,7 +98,8 @@ export function useFullscreenControls(
                 'button:not(:disabled), input:not(:disabled)',
             );
             const target = event.shiftKey ? controls?.[controls.length - 1] : controls?.[0];
-            target?.focus({ preventScroll: true });
+            // Native focus also reveals the target inside a scrollable fullscreen panel.
+            target?.focus();
         } else showBriefly();
     }
 

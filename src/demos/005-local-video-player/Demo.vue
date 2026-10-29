@@ -71,6 +71,20 @@
                     </span>
                 </div>
                 <div
+                    v-if="recording.phase !== 'idle'"
+                    class="recording-indicator"
+                    aria-hidden="true"
+                >
+                    {{
+                        recording.phase === 'paused'
+                            ? 'REC paused'
+                            : recording.phase === 'stopping'
+                                ? 'Finishing'
+                                : 'REC'
+                    }}
+                    · {{ formatTime(recording.seconds) }}
+                </div>
+                <div
                     v-if="dragging"
                     class="drop-overlay"
                     aria-hidden="true"
@@ -104,6 +118,13 @@
                     @mute="toggleMute"
                     @fullscreen="toggleFullscreen"
                     @screenshot="captureFrame"
+                />
+                <RecordingControls
+                    :state="recording"
+                    @start="startRecording"
+                    @stop="stopRecording"
+                    @download="downloadRecording"
+                    @discard="discardRecording"
                 />
                 <p
                     v-if="playbackError"
@@ -140,9 +161,12 @@
 import { computed, ref, useId } from 'vue';
 import VideoFilePanel from './VideoFilePanel.vue';
 import VideoControls from './VideoControls.vue';
+import RecordingControls from './RecordingControls.vue';
 import { useVideoPlayer } from './useVideoPlayer';
 import { useFrameCapture } from './useFrameCapture';
 import { useFullscreenControls } from './useFullscreenControls';
+import { useVideoRecorder } from './useVideoRecorder';
+import { formatTime } from './media';
 
 const video = ref<HTMLVideoElement | null>(null);
 const surface = ref<HTMLElement | null>(null);
@@ -190,8 +214,20 @@ const {
     error: captureError,
     message: captureMessage,
 } = useFrameCapture(video, file, frameReady);
-const playbackError = computed(() => mediaError.value || actionError.value || captureError.value);
-const controlsPinned = computed(() => !!playbackError.value || capturing.value);
+const {
+    view: recording,
+    error: recordingError,
+    start: startRecording,
+    stop: stopRecording,
+    download: downloadRecording,
+    discard: discardRecording,
+} = useVideoRecorder(video, file, frameReady, playing);
+const playbackError = computed(
+    () => mediaError.value || actionError.value || captureError.value || recordingError.value,
+);
+const controlsPinned = computed(
+    () => !!playbackError.value || capturing.value || recording.value.phase === 'stopping',
+);
 const {
     visible: controlsVisible,
     onPointerMove: onControlsPointerMove,
@@ -288,6 +324,20 @@ video {
     font-size: 16px;
     pointer-events: none;
 }
+.recording-indicator {
+    position: absolute;
+    z-index: 1;
+    top: 12px;
+    left: 12px;
+    max-width: calc(100% - 24px);
+    padding: 6px 9px;
+    border-radius: 4px;
+    color: #fff;
+    background: #9d2b3a;
+    font-family: monospace;
+    font-size: 11px;
+    pointer-events: none;
+}
 .player-info {
     padding: 18px 24px 24px;
 }
@@ -345,6 +395,9 @@ video {
     z-index: 2;
     inset-inline: 0;
     bottom: 0;
+    max-height: 80%;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     opacity: 1;
     transform: translateY(0);
     transition:
