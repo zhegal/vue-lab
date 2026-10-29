@@ -1,9 +1,9 @@
 import type { DemoMeta } from '../../core/types';
 
 export default {
-    title: 'The shape of a card',
+    title: 'Card styles',
     description:
-        'A small CSS playground. Make a few adjustments and watch a simple card come to life.',
+        'Adjust background color, border radius, size, and shadow with reactive CSS styles.',
     category: 'UI',
     tags: ['vue', 'css', 'reactivity'],
 } satisfies DemoMeta;

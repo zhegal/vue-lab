@@ -1,11 +1,8 @@
 <template>
     <aside class="sorting-controls" aria-label="Sorting settings">
         <h2>
-            Watch the movement
+            Animation
         </h2>
-        <p class="controls-intro">
-            Same list. A different sense of motion.
-        </p>
         <label class="animation-toggle">
             <span>
                 Animate reordering
@@ -64,7 +61,7 @@
         </div>
         <section class="order-inspector" aria-label="Current item IDs">
             <h3>
-                Stable keys, changing order
+                Item IDs
             </h3>
             <ol>
                 <li v-for="(item, index) in items" :key="item.id">
@@ -77,7 +74,7 @@
                 </li>
             </ol>
             <p class="control-help">
-                Vue keeps each item by its key. Its position is the part that changes.
+                The item ID remains unchanged when its position changes.
             </p>
         </section>
         <p class="motion-note">
@@ -111,7 +108,6 @@ const durationId = useId();
     letter-spacing: -0.025em;
 }
 
-.controls-intro,
 .control-help,
 .motion-note {
     margin: 0;
@@ -126,7 +122,7 @@ const durationId = useId();
     justify-content: space-between;
     min-height: 44px;
     gap: 14px;
-    margin-top: 27px;
+    margin-top: 16px;
     font-size: 12px;
     cursor: pointer;
 }
@@ -257,7 +253,7 @@ const durationId = useId();
     font-size: 10px;
 }
 
-@media (max-width: 960px) {
+@container (max-width: 800px) {
     .sorting-controls {
         border-top: 1px solid var(--border);
         border-left: 0;

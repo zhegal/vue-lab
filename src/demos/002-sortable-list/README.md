@@ -1,4 +1,4 @@
-# A little order
+# Sortable list
 
 ## Overview
 
@@ -34,6 +34,8 @@ it stops on drop, cancellation, window blur/resize, and unmount. Global listener
 - Pointer Events, pointer capture, `touch-action: none` on grips, and `requestAnimationFrame`.
 - Typed component models, emits, computed state, lifecycle cleanup, and live status announcements.
 - Native ordered-list semantics and keyboard controls; `prefers-reduced-motion` disables movement.
+- Container queries adapt the settings panel and rows to their available width, including beside
+  the lab sidebar. The floating preview uses the same row-width breakpoint as the source list.
 
 See the [Vue TransitionGroup guide](https://vuejs.org/guide/built-ins/transition-group.html)
 and [pointer capture reference](https://developer.mozilla.org/en-US/docs/Web/API/Element/setPointerCapture).

@@ -1,9 +1,9 @@
 import type { DemoMeta } from '../../core/types';
 
 export default {
-    title: 'A little order',
+    title: 'Sortable list',
     description:
-        'Drag, rearrange, and watch the gaps close. A sortable list powered by TransitionGroup.',
+        'Reorder items with Pointer Events and animate position changes with TransitionGroup.',
     category: 'Motion',
     tags: ['vue', 'css', 'transition-group', 'pointer-events'],
 } satisfies DemoMeta;

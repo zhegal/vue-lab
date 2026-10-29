@@ -1,4 +1,4 @@
-# The shape of a card
+# Card styles
 
 ## Overview
 
@@ -18,7 +18,7 @@ Width is clamped to the available canvas so the card remains usable on small scr
 
 - Vue `ref()`, `computed()`, component props, and component `v-model`.
 - Native color and range inputs with accessible labels and visible values.
-- CSS aspect ratio, scoped styles, responsive Grid, and reduced-motion preferences.
+- CSS aspect ratio, scoped styles, Grid, container queries, and reduced-motion preferences.
 - Lazy loading, automatic registry discovery, and standalone routing provided by the lab.
 
 ## Alternatives

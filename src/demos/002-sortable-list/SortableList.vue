@@ -98,6 +98,10 @@ watch(activeId, (id) => emit('busy', Boolean(id)), { immediate: true });
 </script>
 
 <style scoped>
+.sort-root {
+    container-type: inline-size;
+}
+
 .sort-instructions {
     margin: 0 0 20px;
     color: var(--secondary);
@@ -150,6 +154,7 @@ watch(activeId, (id) => emit('busy', Boolean(id)), { immediate: true });
     z-index: 100;
     pointer-events: none;
     user-select: none;
+    container-type: inline-size;
 }
 
 .motion-off .sort-move {

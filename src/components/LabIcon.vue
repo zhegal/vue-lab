@@ -23,6 +23,7 @@
 defineProps<{ name: keyof typeof paths }>();
 
 const paths = {
+    menu: ['M4 6h16', 'M4 12h16', 'M4 18h16'],
     arrow: ['M5 12h14', 'm13 6 6 6-6 6'],
     back: ['M19 12H5', 'm11 6-6 6 6 6'],
     external: [

@@ -1,11 +1,7 @@
 <template>
     <NotFoundView v-if="!demo" />
     <div v-else :class="{ 'demo-page': !standalone }">
-        <div v-if="!standalone" class="shell demo-heading">
-            <RouterLink to="/" class="back-link">
-                <LabIcon name="back" />
-                All experiments
-            </RouterLink>
+        <div v-if="!standalone" class="demo-heading">
             <div class="demo-heading-row">
                 <div>
                     <p class="eyebrow category-label">
@@ -35,11 +31,14 @@
                 </a>
             </div>
         </div>
-        <section :class="{ 'demo-workspace': !standalone }" aria-label="Interactive experiment">
+        <section
+            class="demo-stage"
+            :class="{ 'demo-workspace': !standalone }"
+            aria-label="Interactive experiment"
+        >
             <div v-if="!standalone" class="workspace-toolbar">
                 <span class="workspace-label">
-                    <span class="status-dot" aria-hidden="true"></span>
-                    Live playground
+                    Demo
                 </span>
                 <div class="flex flex-wrap items-center gap-2">
                     <button

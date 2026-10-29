@@ -1,8 +1,20 @@
 # Vue Lab
 
-A personal, interactive laboratory for frontend experiments. Explore a demo, adjust it in the browser,
-read its implementation notes, and open its source. Add experiments without editing the catalog,
-router, or infrastructure.
+A personal laboratory for Vue, CSS, and browser API experiments. Each experiment provides an
+interactive demo, implementation notes, and source links. New directories are registered automatically.
+
+## Interface
+
+A persistent sidebar lists experiments by category, with search across IDs, titles, descriptions,
+and tags. Filters remain in place when switching pages. The overview is a compact text index;
+demo pages keep the navigation available alongside the experiment.
+
+On narrow screens, navigation opens in a native modal dialog with keyboard focus management,
+Escape dismissal, and background scroll locking. Standalone mode hides the entire lab shell.
+Light and dark themes use muted blue interface colors; Vue branding retains its green.
+Use concise, factual interface text without taglines or decorative promotional sections.
+The demo stage is an inline-size container. Use container queries to adapt demo layouts to their
+available width alongside the sidebar, including when running in standalone mode.
 
 ## Stack
 
@@ -43,12 +55,14 @@ npm run dev
 
 ```text
 src/
-    components/          Lab shell, catalog, demo loader, and documentation viewer
+    components/          Navigation, header, demo loader, and documentation viewer
     core/                Types, validated automatic registry, source links, and theme
     demos/
-        001-welcome/     Card playground, metadata, components, and README
+        001-welcome/     Reactive card styles
+        002-sortable-list/ Pointer-based sorting and TransitionGroup
+    layouts/             Persistent sidebar and mobile navigation dialog
     router/              Generic hash-based routes
-    views/               Catalog, experiment page, and not-found page
+    views/               Experiment index, demo page, and not-found page
     App.vue
     main.ts
     style.css            Tailwind import, shared tokens, and lab shell styles

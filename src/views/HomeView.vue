@@ -1,127 +1,142 @@
 <template>
-    <div class="shell">
-        <section class="home-hero" aria-labelledby="home-title">
-            <div class="hero-copy">
-                <p class="eyebrow hero-eyebrow">
-                    <span class="status-dot" aria-hidden="true"></span>
-                    A PERSONAL FRONTEND PLAYGROUND
-                </p>
-                <h1 id="home-title">
-                    Small experiments.
-                    <br />
-                    <span>
-                        Endless possibilities.
+    <section aria-labelledby="index-title">
+        <div class="index-heading">
+            <h1 id="index-title">
+                Experiments
+            </h1>
+            <span class="index-count">
+                {{ demos.length }}
+            </span>
+        </div>
+        <p class="index-description">
+            Vue, CSS, and browser API experiments.
+        </p>
+        <ul v-if="demos.length" class="experiment-index">
+            <li v-for="demo in demos" :key="demo.id">
+                <RouterLink :to="`/demo/${demo.id}`" class="index-row">
+                    <span class="index-number">
+                        {{ demo.id.split('-')[0] }}
                     </span>
-                </h1>
-                <p class="hero-description">
-                    A space to explore ideas, break things, and see what works.
-                    <br class="desktop-br" />
-                    Interactive experiments in Vue, CSS, and the browser.
-                </p>
-                <div class="hero-meta">
-                    <span class="flex items-center gap-2">
-                        <LabIcon name="flask" />
-                        {{ demos.length }} {{ demos.length === 1 ? 'experiment' : 'experiments' }}
+                    <div class="index-copy">
+                        <h2>
+                            {{ demo.title }}
+                        </h2>
+                        <p>
+                            {{ demo.description }}
+                        </p>
+                        <DemoTags :tags="demo.tags" />
+                    </div>
+                    <span class="index-category">
+                        {{ demo.category }}
                     </span>
-                    <span class="meta-separator" aria-hidden="true">
-                        /
-                    </span>
-                    <span>
-                        Always a work in progress
-                    </span>
-                </div>
-            </div>
-            <div class="hero-illustration" aria-hidden="true">
-                <div class="orbit orbit-one"></div>
-                <div class="orbit orbit-two"></div>
-                <div class="hero-code-tag tag-top">
-                    &lt;script setup&gt;
-                </div>
-                <div class="hero-tile">
-                    <svg viewBox="0 0 100 86" fill="none">
-                        <path d="M0 0h20l30 52L80 0h20L50 86Z" fill="currentColor" />
-                        <path d="M20 0h18l12 21L62 0h18L50 52Z" fill="var(--text)" />
-                    </svg>
-                </div>
-                <div class="hero-code-tag tag-bottom">
-                    ideas → interactions
-                </div>
-                <span class="orbit-point"></span>
-            </div>
-        </section>
-
-        <section class="catalog-section" aria-labelledby="catalog-title">
-            <div class="section-heading">
-                <h2 id="catalog-title">
-                    The experiments
-                    <span class="section-count">
-                        {{ demos.length.toString().padStart(2, '0') }}
-                    </span>
-                </h2>
-                <span class="section-caption">
-                    Explore. Adjust. Learn.
-                </span>
-            </div>
-            <CatalogFilters
-                v-model:search="search"
-                v-model:category="category"
-                :categories="categories"
-                :total="demos.length"
-            />
-            <p class="results-caption" role="status">
-                Showing {{ filteredDemos.length }} of {{ demos.length }} experiments
-            </p>
-            <div v-if="filteredDemos.length" class="demo-grid">
-                <DemoCard
-                    v-for="demo in filteredDemos"
-                    :key="demo.id"
-                    :demo="demo"
-                />
-            </div>
-            <div v-else class="empty-state">
-                <LabIcon name="search" />
-                <h3>
-                    No experiments found
-                </h3>
-                <p>
-                    Try a different keyword or explore all categories.
-                </p>
-                <button
-                    class="button secondary"
-                    type="button"
-                    @click="clearFilters"
-                >
-                    Clear filters
-                </button>
-            </div>
-        </section>
-    </div>
+                    <LabIcon name="arrow" />
+                </RouterLink>
+            </li>
+        </ul>
+        <p v-else class="empty-state">
+            No experiments available.
+        </p>
+    </section>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { RouterLink } from 'vue-router';
 import { demos } from '../core/registry';
-import CatalogFilters from '../components/CatalogFilters.vue';
-import DemoCard from '../components/DemoCard.vue';
+import DemoTags from '../components/DemoTags.vue';
 import LabIcon from '../components/LabIcon.vue';
-
-const search = ref('');
-const category = ref('All experiments');
-const categories = [...new Set(demos.map((demo) => demo.category))].sort();
-const filteredDemos = computed(() => {
-    const query = search.value.trim().toLocaleLowerCase();
-    return demos.filter((demo) => {
-        const matchesCategory =
-            category.value === 'All experiments' || demo.category === category.value;
-        const searchable = [demo.title, demo.description, ...demo.tags]
-            .join(' ')
-            .toLocaleLowerCase();
-        return matchesCategory && searchable.includes(query);
-    });
-});
-
-function clearFilters() {
-    search.value = '';
-    category.value = 'All experiments';
-}
 </script>
+
+<style scoped>
+.index-heading {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.index-heading h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.04em;
+}
+
+.index-count {
+    padding: 3px 8px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--muted);
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 11px;
+}
+
+.index-description {
+    margin: 12px 0 28px;
+    color: var(--secondary);
+    font-size: 13px;
+    line-height: 1.8;
+}
+
+.experiment-index {
+    margin: 0;
+    padding: 0;
+    border-top: 1px solid var(--border);
+    list-style: none;
+}
+
+.index-row {
+    display: grid;
+    grid-template-columns: 36px minmax(0, 1fr) 64px 20px;
+    align-items: start;
+    gap: 16px;
+    padding: 24px 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+.index-row:hover {
+    background: var(--surface-hover);
+}
+
+.index-number,
+.index-category {
+    padding-top: 3px;
+    color: var(--muted);
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 11px;
+}
+
+.index-category {
+    color: var(--accent);
+}
+
+.index-copy h2 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: 550;
+}
+
+.index-copy p {
+    margin: 0 0 14px;
+    color: var(--secondary);
+    font-size: 13px;
+    line-height: 1.7;
+}
+
+.index-row > svg {
+    width: 16px;
+    height: 16px;
+    margin-top: 4px;
+    color: var(--muted);
+}
+
+@media (max-width: 600px) {
+    .index-row {
+        grid-template-columns: 28px minmax(0, 1fr) 16px;
+        gap: 12px;
+        padding-inline: 0;
+    }
+
+    .index-category {
+        display: none;
+    }
+}
+</style>

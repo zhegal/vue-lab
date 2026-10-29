@@ -2,11 +2,8 @@
     <aside class="card-controls" aria-label="Card settings">
         <div class="controls-heading">
             <h2>
-                Make some adjustments
+                Card settings
             </h2>
-            <p>
-                A few properties. A different feel.
-            </p>
         </div>
         <fieldset class="color-control">
             <legend>
@@ -78,9 +75,6 @@
             </span>
             Reset to defaults
         </button>
-        <p class="controls-footnote">
-            Powered by Vue reactivity & a little CSS.
-        </p>
     </aside>
 </template>
 
@@ -129,14 +123,6 @@ function update<K extends keyof CardSettings>(key: K, value: CardSettings[K]) {
     font-size: 15px;
     font-weight: 600;
     letter-spacing: -0.025em;
-}
-
-.controls-heading p,
-.controls-footnote {
-    margin: 0;
-    color: var(--muted);
-    font-size: 11px;
-    line-height: 1.6;
 }
 
 .color-control {
@@ -253,13 +239,7 @@ function update<K extends keyof CardSettings>(key: K, value: CardSettings[K]) {
     line-height: 1;
 }
 
-.controls-footnote {
-    margin-top: 15px;
-    text-align: center;
-    font-size: 9px;
-}
-
-@media (max-width: 760px) {
+@container (max-width: 760px) {
     .card-controls {
         border-top: 1px solid var(--border);
         border-left: 0;

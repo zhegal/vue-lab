@@ -6,10 +6,10 @@ export interface CardSettings {
 }
 
 export const defaultSettings: Readonly<CardSettings> = {
-    color: '#b6dbc8',
+    color: '#b9c9ed',
     radius: 24,
     size: 280,
     shadow: 24,
 };
 
-export const colorPresets = ['#b6dbc8', '#b9c9ed', '#dfc0dd', '#edc8a7', '#d8d8d0'];
+export const colorPresets = ['#b9c9ed', '#b6dbc8', '#dfc0dd', '#edc8a7', '#d8d8d0'];

@@ -1,7 +1,7 @@
 <template>
     <div class="preview-area">
         <span class="preview-label">
-            YOUR CANVAS
+            Preview
         </span>
         <div class="preview-center">
             <div class="preview-card" :style="cardStyle">
@@ -15,15 +15,15 @@
                 </div>
                 <div>
                     <p class="card-overline">
-                        A LITTLE EXPERIMENT
+                        CSS STYLES
                     </p>
                     <h2>
-                        Make it
+                        Card
                         <br />
-                        your own.
+                        preview
                     </h2>
                     <p class="card-caption">
-                        Good things start with curiosity.
+                        Background, radius, size, and shadow.
                     </p>
                 </div>
                 <div class="card-bottomline">
@@ -36,9 +36,6 @@
                 </div>
             </div>
         </div>
-        <p class="preview-hint">
-            Change a value. See what happens.
-        </p>
     </div>
 </template>
 
@@ -58,7 +55,7 @@ const cardStyle = computed(() => {
         backgroundColor: color,
         borderRadius: `${radius}px`,
         width: `${size}px`,
-        color: brightness > 145 ? '#19332b' : '#ffffff',
+        color: brightness > 145 ? '#20324a' : '#ffffff',
         boxShadow: `0 ${shadow / 2}px ${shadow * 1.8}px -${shadow / 3}px rgb(0 0 0 / 22%)`,
     };
 });
@@ -75,8 +72,7 @@ const cardStyle = computed(() => {
     background-size: 18px 18px;
 }
 
-.preview-label,
-.preview-hint {
+.preview-label {
     color: var(--muted);
     font-size: 11px;
     letter-spacing: 0.08em;
@@ -145,12 +141,6 @@ const cardStyle = computed(() => {
 
 .card-bottomline span:last-child {
     font-size: 21px;
-}
-
-.preview-hint {
-    margin: 0;
-    text-align: center;
-    letter-spacing: 0;
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -20,6 +20,5 @@ export const router = createRouter({
 
 router.afterEach((to) => {
     if (to.name === 'demo') return;
-    document.title =
-        to.name === 'home' ? 'Vue Lab — Frontend experiments' : 'Page not found — Vue Lab';
+    document.title = to.name === 'home' ? 'Vue Lab — Experiments' : 'Page not found — Vue Lab';
 });

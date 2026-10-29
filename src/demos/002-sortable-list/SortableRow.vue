@@ -195,7 +195,7 @@ const gripPoints = [
     visibility: hidden;
 }
 
-@media (max-width: 600px) {
+@container (max-width: 440px) {
     .sort-row {
         gap: 7px;
         padding-right: 7px;

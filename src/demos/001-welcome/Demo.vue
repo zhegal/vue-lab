@@ -27,7 +27,7 @@ function reset() {
     background: var(--surface);
 }
 
-@media (max-width: 760px) {
+@container (max-width: 760px) {
     .welcome-demo {
         grid-template-columns: minmax(0, 1fr);
     }

@@ -2,16 +2,13 @@
     <div class="sortable-demo">
         <section class="sorting-canvas" aria-label="Sortable list playground">
             <div class="canvas-heading">
-                <span class="canvas-label">
-                    A WORK IN PROGRESS
-                </span>
+                <h2>
+                    Items
+                </h2>
                 <span class="items-count">
-                    {{ items.length }} steps
+                    {{ items.length }}
                 </span>
             </div>
-            <h2>
-                Everything in its place.
-            </h2>
             <SortableList
                 v-model="items"
                 :animation-enabled="animationEnabled"
@@ -49,7 +46,7 @@ const items = ref(createItems());
 const animationEnabled = ref(true);
 const duration = ref(280);
 const busy = ref(false);
-const status = ref('Ready when you are. Try moving a step.');
+const status = ref('');
 
 function reset() {
     items.value = createItems();
@@ -68,7 +65,7 @@ function shuffle() {
         next.push(next.shift()!);
     }
     items.value = next;
-    status.value = 'List shuffled. Same keys, a new order.';
+    status.value = 'List shuffled.';
 }
 </script>
 
@@ -94,13 +91,10 @@ function shuffle() {
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 8px;
+    margin-bottom: 16px;
     color: var(--muted);
     font-family: 'SFMono-Regular', Consolas, monospace;
     font-size: 9px;
-}
-
-.canvas-label {
-    letter-spacing: 0.1em;
 }
 
 .items-count {
@@ -111,27 +105,29 @@ function shuffle() {
 }
 
 .sorting-canvas h2 {
-    margin: 20px 0 12px;
-    font-size: clamp(23px, 2.6vw, 32px);
+    margin: 0;
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 16px;
     font-weight: 550;
-    letter-spacing: -0.05em;
+    letter-spacing: -0.02em;
 }
 
 .sorting-status {
-    min-height: 38px;
-    margin: 18px 0 0;
+    min-height: 20px;
+    margin: 12px 0 0;
     color: var(--accent);
     font-size: 11px;
     line-height: 1.8;
 }
 
-@media (max-width: 960px) {
+@container (max-width: 800px) {
     .sortable-demo {
         grid-template-columns: minmax(0, 1fr);
     }
 }
 
-@media (max-width: 600px) {
+@container (max-width: 600px) {
     .sorting-canvas {
         padding-inline: 14px;
     }
