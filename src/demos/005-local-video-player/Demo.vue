@@ -178,7 +178,9 @@ function onDrop(event: DragEvent) {
     background: var(--surface);
 }
 .player-surface {
-    margin: 0 24px;
+    width: calc(100% - 48px);
+    max-width: 640px;
+    margin: 0 auto;
     border: 1px solid var(--border);
     border-radius: 6px;
     overflow: hidden;
@@ -265,6 +267,7 @@ video {
     margin: 0;
     width: 100%;
     height: 100%;
+    max-width: none;
     border: 0;
     border-radius: 0;
     background: #090c11;
@@ -276,7 +279,7 @@ video {
 }
 @container (max-width: 600px) {
     .player-surface {
-        margin-inline: 14px;
+        width: calc(100% - 28px);
     }
     .player-info {
         padding-inline: 20px;

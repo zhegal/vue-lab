@@ -25,7 +25,7 @@
         </div>
         <div class="buttons-row">
             <button
-                class="button secondary"
+                class="button secondary playback-button"
                 type="button"
                 :disabled="!ready"
                 @click="$emit('play')"
@@ -33,7 +33,7 @@
                 {{ playing ? 'Pause' : 'Play' }}
             </button>
             <button
-                class="button secondary"
+                class="button secondary mute-button"
                 type="button"
                 :disabled="!ready"
                 :aria-label="muted || volume === 0 ? 'Unmute' : 'Mute'"
@@ -41,6 +41,15 @@
                 @click="$emit('mute')"
             >
                 {{ muted || volume === 0 ? 'Unmute' : 'Mute' }}
+            </button>
+            <button
+                class="button secondary fullscreen-button"
+                type="button"
+                :disabled="!fullscreenSupported"
+                :aria-pressed="fullscreen"
+                @click="$emit('fullscreen')"
+            >
+                {{ fullscreen ? 'Exit fullscreen' : 'Fullscreen' }}
             </button>
             <div class="volume-control">
                 <label :for="`${id}-volume`">
@@ -61,15 +70,6 @@
                     {{ muted ? 'Muted' : `${Math.round(volume)}%` }}
                 </output>
             </div>
-            <button
-                class="button secondary fullscreen-button"
-                type="button"
-                :disabled="!fullscreenSupported"
-                :aria-pressed="fullscreen"
-                @click="$emit('fullscreen')"
-            >
-                {{ fullscreen ? 'Exit fullscreen' : 'Fullscreen' }}
-            </button>
         </div>
         <p v-if="!fullscreenSupported" class="fullscreen-help">
             The Fullscreen API is unavailable in this browser context.
@@ -136,23 +136,33 @@ input[type='range'] {
     gap: 8px;
 }
 .volume-control {
-    display: flex;
+    display: grid;
+    grid-template-columns: 40px minmax(0, 1fr) 44px;
     align-items: center;
     gap: 10px;
-    flex: 1 1 240px;
+    flex: 0 0 220px;
+    margin-left: auto;
     font-size: 11px;
 }
 .volume-control input {
-    flex: 1;
-    min-width: 60px;
-    max-width: 160px;
+    width: 100%;
+    min-width: 0;
 }
 .volume-control output {
-    min-width: 42px;
     color: var(--secondary);
+    font-variant-numeric: tabular-nums;
+}
+.playback-button {
+    width: 64px;
+}
+.mute-button {
+    width: 76px;
 }
 .fullscreen-button {
-    margin-left: auto;
+    width: 112px;
+}
+.buttons-row > button {
+    flex-shrink: 0;
 }
 .fullscreen-help {
     margin: 12px 0 0;
@@ -168,13 +178,16 @@ input:disabled {
     .video-controls {
         padding: 14px;
     }
-    .volume-control {
-        order: 1;
-        flex-basis: 100%;
-        margin-top: 8px;
+    .buttons-row {
+        display: grid;
+        grid-template-columns: 60px 72px minmax(0, 1fr);
     }
-    .volume-control input {
-        max-width: none;
+    .buttons-row > button {
+        width: 100%;
+    }
+    .volume-control {
+        grid-column: 1 / -1;
+        margin: 8px 0 0;
     }
 }
 </style>

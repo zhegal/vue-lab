@@ -17,6 +17,10 @@ and metadata; `VideoControls.vue` exposes labelled native buttons and range inpu
 `useVideoPlayer.ts` owns playback, media events, object URLs and fullscreen lifecycle; `media.ts`
 contains file validation, bounds and display formatting. No extra dependencies are used.
 
+The regular player is centered and capped at 640px; fullscreen uses the full viewport. Volume sits
+separately on the right, with fixed button widths and output columns so mute labels and zero volume
+do not move its slider. On narrow screens the volume controls occupy their own row.
+
 Validation rejects empty files, multiple drops and non-video MIME types. Known extensions are a
 fallback only for missing/generic MIME types; the browser decoder decides actual codec support.
 Invalid selection preserves the current video. The file input resets after each choice so selecting
