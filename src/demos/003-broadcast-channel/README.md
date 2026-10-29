@@ -6,6 +6,9 @@ Synchronize a note and an English/Ukrainian preview between tabs. Open a second 
 link, edit either tab, and inspect the event logs. Join a different room to isolate a conversation;
 disconnect to stop receiving updates. The lab's language and theme are unaffected.
 
+Open both tabs from the same development, preview or deployed URL. Different hostnames or ports
+use different origins and cannot share this channel.
+
 ## Implementation
 
 `Demo.vue` owns connection controls and generates a base-aware standalone link with the active room.

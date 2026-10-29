@@ -28,7 +28,7 @@ previews needed shared behavior. Pinia would add little value for this local com
 
 ## Limitations
 
-- Changes are session-local and reset when the experiment unmounts.
+- Changes stay in memory and reset when the experiment unmounts or the page reloads.
 - The selected width is a target width; narrow screens constrain the actual rendered width.
 - Brightness estimation is approximate and does not guarantee WCAG contrast for every custom color.
 - The experiment uses lab color tokens and Tailwind's baseline reset, rather than iframe isolation.

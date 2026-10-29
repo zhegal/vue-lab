@@ -13,6 +13,10 @@ validation creates a local snapshot and focuses its heading; editing clears that
 clears values, errors, field state and attempts, then focuses the name input. Tab remains native.
 There is no initial autofocus, network submission or persistence.
 
+Names require 2–60 characters after trimming, emails up to 120 characters, and messages 20–500.
+Topic must be one of the provided choices. When enabled, project code requires two uppercase
+letters, a hyphen and three digits, such as `VL-010`. Lengths count UTF-16 code units.
+
 ## Implementation
 
 `Demo.vue` coordinates the form, summary, focus inspector and result. `ContactFields.vue` groups

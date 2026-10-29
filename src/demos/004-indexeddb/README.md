@@ -9,8 +9,10 @@ Reload from storage to read its changes. Normal and standalone modes share the s
 ## Implementation
 
 `database.ts` defines the record shape and wraps the native IndexedDB open/request events in promises.
-Version 1 creates the `notes` store with an auto-incrementing `id` key. Each operation starts a fresh
-transaction. Results resolve on `transaction.oncomplete`, so request success alone never confirms a
+The namespaced database is `vue-lab-004-indexeddb`. Version 1 creates the `notes` store with an
+auto-incrementing `id` key; records contain `id`, `text` and `updatedAt`. Notes are trimmed and must
+contain 1–300 UTF-16 code units. Each operation starts a fresh transaction.
+Results resolve on `transaction.oncomplete`, so request success alone never confirms a
 write. Read results are sorted by update time and then ID.
 
 `useNotesDatabase.ts` owns the connection, loading/error states and asynchronous operations.

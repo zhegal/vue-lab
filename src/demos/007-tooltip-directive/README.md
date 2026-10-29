@@ -20,8 +20,12 @@ and escaping a transformed overflow container.
 `{ text, delay?, disabled? }`; the optional directive argument selects top/right/bottom/left.
 
 ```vue
-<button v-tooltip:top="'Extra information'">Help</button>
-<button v-tooltip:[placement]="{ text, delay: 350, disabled }">Preview</button>
+<button v-tooltip:top="'Extra information'">
+    Help
+</button>
+<button v-tooltip:[placement]="{ text, delay: 350, disabled }">
+    Preview
+</button>
 ```
 
 `tooltipController.ts` owns each trigger's DOM and interaction state. A description node with a
