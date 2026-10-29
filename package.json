@@ -1,0 +1,46 @@
+{
+    "name": "vue-lab",
+    "version": "0.1.0",
+    "private": true,
+    "type": "module",
+    "engines": {
+        "node": ">=24.0.0"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/zhegal/vue-lab"
+    },
+    "scripts": {
+        "dev": "vite",
+        "build": "npm run type-check && vite build",
+        "preview": "vite preview",
+        "type-check": "vue-tsc --build",
+        "lint": "eslint . --max-warnings 0",
+        "lint:fix": "eslint . --fix",
+        "format": "node scripts/format.mjs --write",
+        "format:check": "node scripts/format.mjs",
+        "test": "node --test tests/*.test.ts",
+        "check": "npm run format:check && npm run lint && npm run type-check && npm test"
+    },
+    "dependencies": {
+        "markdown-it": "^15.0.3",
+        "vue": "^3.5.44",
+        "vue-router": "^5.4.0"
+    },
+    "devDependencies": {
+        "@tailwindcss/vite": "^4.3.3",
+        "@types/markdown-it": "^14.2.0",
+        "@types/node": "^24.0.0",
+        "@vitejs/plugin-vue": "^6.0.10",
+        "@vue/eslint-config-typescript": "^14.9.0",
+        "@vue/tsconfig": "^0.9.1",
+        "eslint": "^10.13.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-vue": "^10.12.0",
+        "prettier": "^3.9.10",
+        "tailwindcss": "^4.3.3",
+        "typescript": "~6.0.3",
+        "vite": "^8.3.5",
+        "vue-tsc": "^3.3.13"
+    }
+}
