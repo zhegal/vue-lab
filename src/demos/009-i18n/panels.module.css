@@ -1,0 +1,90 @@
+.panel {
+    min-width: 0;
+    padding: 24px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+}
+.title {
+    margin: 0 0 20px;
+    font-size: 15px;
+    font-weight: 600;
+}
+.field {
+    display: grid;
+    min-width: 0;
+    gap: 8px;
+    margin: 16px 0;
+    font-size: 12px;
+}
+.input {
+    box-sizing: border-box;
+    width: 100%;
+    min-width: 0;
+    padding: 9px 10px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--text);
+    background: var(--surface);
+    font: inherit;
+    font-size: 12px;
+}
+.help {
+    margin: 10px 0 0;
+    color: var(--secondary);
+    font-size: 11px;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+.output {
+    margin: 16px 0;
+    padding: 14px;
+    border-radius: 5px;
+    background: var(--canvas);
+    font-size: 14px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+.output p {
+    margin: 0;
+}
+.output p + p {
+    margin-top: 6px;
+}
+.code {
+    color: var(--accent);
+    font-family: 'SFMono-Regular', Consolas, monospace;
+    font-size: 11px;
+    overflow-wrap: anywhere;
+}
+.samples {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+.samples button {
+    min-width: 35px;
+    min-height: 32px;
+    padding: 6px 8px;
+}
+.results {
+    display: grid;
+    gap: 14px;
+    margin: 20px 0 0;
+    font-size: 12px;
+}
+.results dt {
+    margin-bottom: 4px;
+    color: var(--secondary);
+    font-size: 11px;
+}
+.results dd {
+    margin: 0;
+    line-height: 1.8;
+    overflow-wrap: anywhere;
+}
+.fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 12px;
+}
